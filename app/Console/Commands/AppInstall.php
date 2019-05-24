@@ -60,10 +60,11 @@ class AppInstall extends Command
 		if (!file_exists($config)) {
 //			copy(base_path('.env.example'), $config);
 			$this->error('未发现 .env 配置文件，请复制 .env.example 文件为 .env 并修改配置');
+			return 1;
 		}
 		
 		// 初始化数据
-//		$this->call('key:generate');
+		$this->call('key:generate');
 		$this->call('migrate',['--seed'=>true]);
 		
 		
@@ -82,11 +83,11 @@ class AppInstall extends Command
 		$this->line('');
 		$this->comment('安装成功，接下来可能要做的事：');
 		$this->comment('1、配置访问域名，推荐使用 Nginx，可参考本项目目录下的 ebank_nginx.conf');
-		$this->comment('2、配置队列环境，推荐使用 Supervisor，可参考本项目目录下的 ebank_supervior.conf');
+		$this->comment('2、配置队列环境，推荐使用 Supervisor，可参考本项目目录下的 ebank_supervior.ini');
 		$this->comment('3、重启nginx，访问域名测试');
-		$this->comment('4、访问 [域名]/admin 登录后台，账号密码：admin/123456');
+		$this->comment('4、访问 [域名]/admin 登录后台，账号/密码：admin/123456');
 		$this->comment('5、访问 [域名]/sandbox 进行沙盒接口调试(模拟 EBankSdk.php)');
-		$this->comment('6、进行队列测试，可调用 email_bug() 方法测试(配置好 .env下的 SMTP)');
+		$this->comment('6、务必进行队列(queue)测试，可调用 email_bug() 方法测试(配置好 .env下的 SMTP)');
 	}
 	
 	

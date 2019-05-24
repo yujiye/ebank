@@ -1,6 +1,6 @@
 <template>
 	<div class="purse_user_type">
-		<div class="typo">
+		<div class="typo" @keydown.enter="search(1)">
 			<blockquote class="blockquote_normal">
 				<p>
 					用户ID：<input class="mdui-textfield-input input_normal" type="text" v-model="keyword.user_id" />
@@ -9,7 +9,7 @@
 					银行户名：<input class="mdui-textfield-input input_normal" type="text" v-model="keyword.realname" />
 				</p>
 				<p>
-					日期筛选：<vue-datepicker-local v-model="keyword.date" clearable />
+					日期筛选：<date-picker v-model="keyword.date"></date-picker>
 				</p>
 				<a class="mdui-btn mdui-ripple mdui-color-theme" @click="search(1)"><i class="mdui-icon mdui-icon-left material-icons">search</i>搜索</a>
 				<a class="mdui-btn mdui-ripple mdui-color-pink" @click="exports"><i class="mdui-icon mdui-icon-left material-icons">file_upload</i>导出</a>

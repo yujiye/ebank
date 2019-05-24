@@ -13,12 +13,14 @@ use Illuminate\Support\Facades\Cache;
 
 class OrderPayments
 {
+	private $merchant_id;
 	private $order_no;
 	private $amount_thread;
 	private $amount_wallet;
 	private $product_name;
-	public function __construct($order_no,$amount_thread,$amount_wallet,$product_name)
+	public function __construct($merchant_id,$order_no,$amount_thread,$amount_wallet,$product_name)
 	{
+		$this->merchant_id = $merchant_id;
 		$this->order_no = $order_no;
 		$this->amount_thread = $amount_thread;
 		$this->amount_wallet = $amount_wallet;
@@ -56,7 +58,7 @@ class OrderPayments
 			'order_no'	=> $this->order_no,
 			'type'		=> 'app',
 			'platform'	=> 'wechat',
-			'content'	=> $result
+			'content'	=> $result->getContent(),
 		];
 	}
 	
@@ -92,7 +94,7 @@ class OrderPayments
 			'order_no'	=> $this->order_no,
 			'type'		=> 'url',	// location.href 跳转
 			'platform'	=> 'wechat',
-			'content'	=> $result->mweb_url
+			'content'	=> $result->getTargetUrl(),
 		];
 	}
 	
@@ -143,7 +145,7 @@ class OrderPayments
 			'order_no'	=> $this->order_no,
 			'type'		=> 'form',
 			'platform'	=> 'alipay',
-			'content'	=> $result
+			'content'	=> $result->getContent(),
 		];
 	}
 	
@@ -154,7 +156,7 @@ class OrderPayments
 			'order_no'	=> $this->order_no,
 			'type'		=> 'form',
 			'platform'	=> 'alipay',
-			'content'	=> $result
+			'content'	=> $result->getContent(),
 		];
 	}
 	
@@ -165,7 +167,7 @@ class OrderPayments
 			'order_no'	=> $this->order_no,
 			'type'		=> 'app',
 			'platform'	=> 'alipay',
-			'content'	=> $result
+			'content'	=> $result->getContent(),
 		];
 	}
 	
@@ -191,6 +193,20 @@ class OrderPayments
 			'type'		=> 'qrcode',
 			'platform'	=> 'alipay',
 			'content'	=> $result->qr_code
+		];
+	}
+	
+	public function alipay_mini(){
+		$param = request()->validate([
+			'buyer_id'	=> 'required',
+		]);
+		$order_unified = new OrderUnified();
+		$result = $order_unified->alipayMini($this->order_no,$this->amount_thread,$this->product_name, $param['buyer_id']);
+		return [
+			'order_no'	=> $this->order_no,
+			'type'		=> 'mini',
+			'platform'	=> 'alipay',
+			'content'	=> $result
 		];
 	}
 }

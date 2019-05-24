@@ -1,6 +1,6 @@
 <template>
 	<div class="purse_user">
-		<div class="typo">
+		<div class="typo" @keydown.enter="search(1)">
 			<blockquote class="blockquote_normal">
 				<a class="mdui-btn mdui-ripple mdui-color-theme" @click="add(0)"><i class="mdui-icon mdui-icon-left material-icons">add</i>添加</a>
 			</blockquote>
@@ -13,7 +13,7 @@
 					值：<input class="mdui-textfield-input input_normal" type="text" v-model="keyword.value" />
 				</p>
 				<p>
-					日期筛选：<vue-datepicker-local v-model="keyword.date" clearable />
+					日期筛选：<date-picker v-model="keyword.date"></date-picker>
 				</p>
 				<a class="mdui-btn mdui-ripple mdui-color-theme" @click="search(1)"><i class="mdui-icon mdui-icon-left material-icons">search</i>搜索</a>
 			</blockquote>
@@ -64,7 +64,7 @@
 			<div class="mdui-dialog-title">
 				系统配置新增/修改
 			</div>
-			<div class="mdui-dialog-content">
+			<div class="mdui-dialog-content" @keydown.enter="add_submit">
 				<form>
 					<div class="mdui-container">
 						<div class="mdui-textfield">
@@ -164,7 +164,7 @@
 			del(id){
 				let t = this;
 				mdui.confirm('删除后数据不可恢复，确认删除请点击【确定】按钮', '确认?', function(){
-					t.$API.delete('/system/config',{id:id}).then(function(){
+					t.$API.del('/system/config',{id:id}).then(function(){
 						t.init();
 					}).catch(function(msg){
 						
@@ -177,7 +177,7 @@
 			},
 			rank(id,action){
 				let t = this;
-				tips('更新排序中...');
+				t.tips('更新排序中...');
 				t.$API.post('/system/config_rank',{id:id,action:action}).then(function(data){
 					t.init();
 				}).catch(function(msg){

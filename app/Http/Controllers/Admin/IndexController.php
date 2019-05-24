@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\BasicRequest;
-use App\Models\FundBehavior;
+use App\Models\FundConfig;
+use App\Models\FundMerchantBehavior;
 use App\Models\FundMerchant;
 use App\Models\FundOrder;
 use App\Models\FundOrderPayment;
@@ -16,7 +17,12 @@ use Illuminate\Support\Facades\DB;
 class IndexController extends CommonController
 {
 	public function index(BasicRequest $request){
-		return view('admin.index');
+		$project_name = FundConfig::get('project_name', config('app.name'));
+		$github_show = FundConfig::get('github_show', config('app.name'));
+		return view('admin.index', compact(
+			'project_name',
+			'github_show'
+		));
 	}
 	
 	/**
@@ -59,7 +65,7 @@ class IndexController extends CommonController
 		$FundUserPurseToday = FundUserPurse::where('created_at','>=',$today_start)->where('created_at','<',$today_end)->where('user_id','>',0)->groupBy('user_id');
 		$today_new_user_count = (clone $FundUserPurseToday)->count();
 		
-		$FundBehaviorToday = FundBehavior::where('created_at','>=',$today_start)->where('created_at','<',$today_end);
+		$FundBehaviorToday = FundMerchantBehavior::where('created_at','>=',$today_start)->where('created_at','<',$today_end);
 		$FundTransferToday = FundTransfer::where('created_at','>=',$today_start)->where('created_at','<',$today_end)->where('status',1);
 		$today_behavior_count = (clone $FundBehaviorToday)->count();
 		$today_behavior_error_count = (clone $FundBehaviorToday)->where('status','!=',1)->count();
@@ -104,7 +110,7 @@ class IndexController extends CommonController
 		$FundUserPurseYesterday = FundUserPurse::where('created_at','>=',$yesterday_start)->where('created_at','<',$yesterday_end)->where('user_id','>',0)->groupBy('user_id');
 		$yesterday_new_user_count = (clone $FundUserPurseYesterday)->count();
 		
-		$FundBehaviorYesterday = FundBehavior::where('created_at','>=',$yesterday_start)->where('created_at','<',$yesterday_end);
+		$FundBehaviorYesterday = FundMerchantBehavior::where('created_at','>=',$yesterday_start)->where('created_at','<',$yesterday_end);
 		$FundTransferYesterday = FundTransfer::where('created_at','>=',$yesterday_start)->where('created_at','<',$yesterday_end)->where('status',1);
 		$yesterday_behavior_count = (clone $FundBehaviorYesterday)->count();
 		$yesterday_behavior_error_count = (clone $FundBehaviorYesterday)->where('status','!=',1)->count();

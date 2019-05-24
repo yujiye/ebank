@@ -7,8 +7,11 @@
 .env
 .installed
 npm-debug.log
+/package-lock.json
 /vendor
 /node_modules
 /.idea
 /public/storage
+/storage/laravels.pid
+/storage/laravels.json
 

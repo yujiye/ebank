@@ -63,35 +63,37 @@
 					<i class="mdui-icon material-icons">refresh</i>
 				</a>
 			</div>
-			<table class="mdui-table">
-				<thead>
-				<tr>
-					<th>订单ID</th>
-					<th>订单号</th>
-					<th>金额(分)</th>
-					<th>支付时间</th>
-					<th>操作</th>
-				</tr>
-				</thead>
-				<tbody>
-				<template v-if="order_notify.length > 0">
-				<tr v-for="(val,key) of order_notify">
-					<td v-text="val.id"></td>
-					<td v-text="val.order_no"></td>
-					<td v-text="val.amount"></td>
-					<td v-text="val.pay_time"></td>
-					<td><a class="mdui-btn mdui-ripple mdui-color-pink" @click="notify(val.id)">手动通知</a></td>
-				</tr>
-				</template>
-				<template v-else>
-				<tr>
-					<td colspan="5">
-						<div class="mdui-p-y-2 mdui-valign order-notify-clear"><span class="mdui-m-r-1">服务正常工作中</span><i class="mdui-icon material-icons mdui-text-color-orange">sentiment_satisfied</i></div>
-					</td>
-				</tr>
-				</template>
-				</tbody>
-			</table>
+			<div class="mdui-table-fluid">
+				<table class="mdui-table mdui-table-hoverable">
+					<thead>
+					<tr>
+						<th>订单ID</th>
+						<th>订单号</th>
+						<th>金额(分)</th>
+						<th>支付时间</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody>
+					<template v-if="order_notify.length > 0">
+					<tr v-for="(val,key) of order_notify">
+						<td v-text="val.id"></td>
+						<td v-text="val.order_no"></td>
+						<td v-text="val.amount"></td>
+						<td v-text="val.pay_time"></td>
+						<td><a class="mdui-btn mdui-ripple mdui-color-pink" @click="notify(val.id)">手动通知</a></td>
+					</tr>
+					</template>
+					<template v-else>
+					<tr>
+						<td colspan="5">
+							<div class="mdui-p-y-2 mdui-valign order-notify-clear"><span class="mdui-m-r-1">服务正常工作中</span><i class="mdui-icon material-icons mdui-text-color-green">sentiment_satisfied</i></div>
+						</td>
+					</tr>
+					</template>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	</transition>
@@ -307,7 +309,7 @@
 			},
 			notify(id) {
 				let t = this;
-				mdui.confirm('请求重新进入通知队列，如果多次失败请检查队列(queue)服务配置，点击【确定】继续', '手动发起异步通知', function () {
+				mdui.confirm('请求重新进入通知队列，如果多次失败请检查通知地址，点击【确定】继续', '手动发起异步通知', function () {
 					t.$API.post('/order/notify', {id: id}).then(function (data) {
 						mdui.alert("已重新分发通知任务", function () {}, {history: false});
 						t.order_unnotify();
@@ -329,7 +331,7 @@
 </script>
 <style lang="scss" scoped>
 	.card {
-		min-width:180px;
+		min-width:160px;
 	}
 	.content-space {
 		padding:0 0.5rem;

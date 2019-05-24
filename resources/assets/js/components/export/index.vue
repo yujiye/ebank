@@ -1,6 +1,6 @@
 <template>
 	<div class="export">
-		<div class="typo">
+		<div class="typo" @keydown.enter="search(1)">
 			<blockquote class="blockquote_normal">
 				* 记得及时删除不必要的导出文件，避免服务器磁盘占用。删除后外链下载失效。
 			</blockquote>
@@ -9,7 +9,7 @@
 					操作名：<input class="mdui-textfield-input input_normal" type="text" v-model="keyword.name" />
 				</p>
 				<p>
-					日期筛选：<vue-datepicker-local v-model="keyword.date" clearable />
+					日期筛选：<date-picker v-model="keyword.date"></date-picker>
 				</p>
 				<a class="mdui-btn mdui-ripple mdui-color-theme" @click="search(1)"><i class="mdui-icon mdui-icon-left material-icons">search</i>搜索</a>
 			</blockquote>
@@ -100,7 +100,7 @@
 			},
 			del(id){
 				let t = this;
-				t.$API.delete('/export/index',{id:id}).then(function(data){
+				t.$API.del('/export/index',{id:id}).then(function(data){
 					mdui.alert('服务器文件已删除，外链失效','执行完成',function(){},{history:false,confirmText:'完成'});
 					t.init();
 				}).catch(function(msg){

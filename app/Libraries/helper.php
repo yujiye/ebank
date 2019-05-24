@@ -201,7 +201,7 @@ function json_return($var,$error_msg = '服务器错误，请稍后重试',$succ
  */
 function exception($message = '',$var = false){
 	if(!$var){
-		abort(500,$message);
+		abort(500, $message);
 	}
 	return true;
 }
@@ -234,6 +234,21 @@ function email_bug(...$msg){
 	}
 	$url = request()->fullUrl();
 	\Illuminate\Support\Facades\Mail::to($receives)->queue((new \App\Mail\Bug($url,$_GET,$_POST,$_REQUEST,$_SERVER,$_COOKIE,$_SESSION,$msg))->onQueue(queue_name('email')));
+	return true;
+}
+
+/**
+ * bug 邮件发送，收件人为数组配置
+ * @param $msg
+ * @return bool
+ */
+function email_notice(...$msg){
+	$receives = config('basic.bug_receives');
+	if(empty($receives)){
+		logger()->alert('收件人邮箱未配置，忽略发送邮件请求');
+		return false;
+	}
+	\Illuminate\Support\Facades\Mail::to($receives)->queue((new \App\Mail\Notice($msg))->onQueue(queue_name('email')));
 	return true;
 }
 

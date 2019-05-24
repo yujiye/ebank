@@ -35,8 +35,6 @@ class SandboxController extends Controller
 //		$bank = new EBank();
 //		$sdk = new EBankSdk();
 //		$bank->initPurse();
-//		$s = $bank->userPurseDetail(4);
-//		$s = $bank->unfreeze(1);
 		/**
 		 * 转账多个，使用二维数组区分，可提前加入二维数组，最后统一转账，避免事务无法统一回滚问题
 		 * 系统用户不必指定uid
@@ -47,6 +45,8 @@ class SandboxController extends Controller
 //		];
 //		$s = EBankSdk::transfer($transfer);
 //		$s = EBankSdk::transfer($transfer,true);	// 异步转账，无返回值
+		
+		// 单一转账，一条条转更方便，需求不复杂时使用
 //		$s = EBankSdk::transferAdd(3020110301)->from(1)->to(1)->amount(10)->transfer(true);
 		/**
 		 * payType 方法可以多次调用，实现组合支付
@@ -61,6 +61,10 @@ class SandboxController extends Controller
 		
 		// 转账冲正，传递 fund_transfer 表 id
 //		$s = EBankSdk::unTransfer(57);
+		
+		// 冻结、解冻
+//		$s = EBankSdk::freeze(1,100,'cash');
+//		$s = EBankSdk::unfreeze(6);
 		
 		// 提现
 //		$s = EBankSdk::withdraw(1)->amount(18)->account('dfdf@qq.com')->purse('cash')->realname('晏勇')->bankName('中国公账')->bankNo('333333')->bank();

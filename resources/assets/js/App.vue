@@ -3,13 +3,8 @@
 		<header class="mdui-appbar mdui-appbar-fixed">
 			<div class="mdui-toolbar mdui-color-theme">
 				<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-drawer="{target: '#main-drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></span>
-				<router-link :to="{path:'/'}" class="mdui-typo-headline mdui-hidden-md-up">EBank</router-link>
-				<router-link :to="{path:'/'}" class="mdui-typo-title mdui-hidden-sm-down">EBank 电子银行</router-link>
+				<router-link :to="{path:'/'}" class="mdui-typo-headline">{{PROJECT_NAME}}</router-link>
 				<div class="mdui-toolbar-spacer"></div>
-				<!--<div class="mdui-spinner mdui-spinner-colorful mdui-hidden ajax_loading"></div>-->
-				<a href="javascript:location.reload();" class="mdui-btn mdui-btn-icon">
-					<i class="mdui-icon material-icons">refresh</i>
-				</a>
 				<span class="mdui-btn mdui-ripple" mdui-menu="{target: '.menu_user'}">
 					<i class="mdui-icon material-icons">person</i>{{user.name || '未登录'}}
 				</span>
@@ -65,7 +60,7 @@
 				<div class="mdui-card-media">
 					<img src="../images/snow_square_tiny.png" style="height:200px;" />
 					<!-- 卡片中可以包含一个或多个菜单按钮 -->
-					<div class="mdui-card-menu">
+					<div class="mdui-card-menu" v-if="GITHUB_SHOW">
 						<a target="_blank" href="//github.com/yybawang/ebank">
 							<button class="mdui-btn mdui-text-color-grey">github</button>
 						</a>
@@ -110,7 +105,7 @@
 			<div class="mdui-dialog-title">
 				修改登录密码
 			</div>
-			<div class="mdui-dialog-content">
+			<div class="mdui-dialog-content" @keydown.enter="add_submit">
 				<div class="mdui-container">
 					<div class="mdui-textfield">
 						<label class="mdui-textfield-label">现登录密码</label>
@@ -141,10 +136,11 @@
 	export default {
 		data(){
 			return {
+				PROJECT_NAME : PROJECT_NAME,
+				GITHUB_SHOW : GITHUB_SHOW,
 				user : '',
 				menu : '',
 				menu_index : 0,
-				initing : false,
 				password_reset_dialog : '',
 				password_reset : {
 					password_old : '',
@@ -174,19 +170,19 @@
 					for(let i in t.password_reset){
 						t.password_reset[i] = '';
 					}
+				}).catch(function(){
+				
 				})
 			},
 			init(){
 				let t = this;
-				// if(!t.initing){
-					t.initing = true;
-					t.$API.get('/init').then(function(data){
-						t.user = data.user;
-						t.menu = data.menu;
-						t.initing = false;
-						t.menu_active();
-					});
-				// }
+				t.$API.get('/init').then(function(data){
+					t.user = data.user;
+					t.menu = data.menu;
+					t.menu_active();
+				}).catch(function(){
+				
+				});
 			},
 			initClear(){
 				let t = this;
@@ -195,9 +191,11 @@
 			},
 			logout(){
 				let t = this;
-				tips('即将跳转到登录页');
+				t.tips('即将跳转到登录页');
 				t.$API.post('/logout').then(function(data){
 					t.$router.push({path:'/login'});
+				}).catch(function(){
+				
 				});
 			}
 		},
